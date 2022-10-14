@@ -1,6 +1,6 @@
 import passport from "passport";
-import FacebookStrategy from "passport-facebook"; 
-const FacebookStrategy = FacebookStrategy().Strategy;
+import Facebook from "passport-facebook";
+const FacebookStrategy = Facebook().Strategy;
 
 const FACEBOOK_ID = "YOUR_FACEBOOK_ID";
 const FACEBOOK_SECRET = "YOUR_FACEBOOK_SECRET";
@@ -13,8 +13,8 @@ passport.use(
       clientSecret: FACEBOOK_APP_SECRET,
       callbackURL: "http://localhost:3000/auth/facebook/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+    function (accessToken, refreshToken, profile, cb) {
+      return cb(err, profile);
     }
   )
 );
@@ -26,6 +26,5 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
-
 
 export default passport_setup;

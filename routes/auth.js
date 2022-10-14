@@ -19,19 +19,12 @@ router.get("/auth/facebook/sucess", (request, resolve) => {
     });
   }
 });
-
 router.get(
   "/auth/facebook/callback",
-  passport.authenticate("facebook"),
-  (req, res) => {
-    router.get(
-      "/auth/facebook/callback",
-      passport.authenticate("facebook", {
-        successRedirect: CLIENTE_URL,
-        failureRedirect: "auth/login/failed",
-      })
-    );
-  }
+  passport.authenticate("facebook", {
+    successRedirect: CLIENTE_URL,
+    failureRedirect: "auth/login/failed",
+  })
 );
 
 router.get("/login/falied", (request, resolve) => {
