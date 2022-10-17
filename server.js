@@ -1,52 +1,35 @@
+import CookieSession from "cookie-session";
 import Express from "express";
-import cookieSession from "cookie-session";
+import Cors from "cors";
+import PassportSetup  from "./passport.js";
 import Passport from "passport";
-import cors from "cors";
-import authRoutes from "./routes/auth.js";
-import passportSetup from "./config/passport_setup.js";
-const passports = passportSetup();
+import AuthRoutes from "./routes/auth.js";
 
-const App = Express();
-const cookieSessions = cookieSession();
-const PORT = 5000;
-const passport = Passport();
 
-App.get("/", (request, resolve) => {
-  res.send("Hello World!");
-});
+const cookieSession = CookieSession;
+const cors = Cors;
+const passportSetup = PassportSetup;
+const authRoute = AuthRoutes;
+const passport = Passport;
+const app = Express();
 
-App.listen(PORT, () => {
-  console.log("Server running!");
-});
-
-App.use(
-  cookieSessions({
-    name: "session",
-    keys: ["key1", "key2"],
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  })
+app.use(
+  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
 );
 
-App.use(passport.initialize());
-App.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-App.use(
+app.use(
   cors({
-    origin: "http://localhost:3000", // allow to server to accept request from different origin
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // allow session cookie from browser to pass through
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
   })
 );
 
-app.get('/auth/facebook',
-  passport.authenticate('facebook'));
+app.use("/auth", authRoute);
 
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });
-
-
-App.use("/auth", authRoutes);
+app.listen("5000", () => {
+  console.log("Server is running!");
+});
