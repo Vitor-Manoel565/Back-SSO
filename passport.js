@@ -1,19 +1,20 @@
 import FacebookStrategys from 'passport-facebook';
 import Passport from 'passport';
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
+import express from 'express'
 const FacebookStrategy = FacebookStrategys.Strategy;
 const passport = Passport;
 
 
-const FACEBOOK_APP_ID = "1147465239309646";
-const FACEBOOK_APP_SECRET = "80423f9a17649ab49d1223ed597b2b8c";
 
 
 
 passport.use(
   new FacebookStrategy(
     {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
     },
     function (accessToken, refreshToken, profile, done) {
